@@ -96,8 +96,6 @@ SlotsCol.prototype.resetColPosition = function() {
 SlotsCol.prototype.endSpin = function() {
 	this.isSpinning = false;
 
-	// this.endSpinAnimation();
-
 	var spinSpeed = this.spinSpeed;
 	var col = this;
 	$({ speed: 500 }).animate({ speed: spinSpeed }, {
