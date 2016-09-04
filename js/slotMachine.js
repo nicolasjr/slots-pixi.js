@@ -6,9 +6,9 @@ function SlotMachine(totalSlotsCol) {
 	this.totalSlotsCol = totalSlotsCol;
 
 	this.backgroundImage = "images/machine.png";
-	this.spinDuration = 2000;
+	this.spinDuration = 1500;
 
-	this.intervalBetweenSpinStop = 250;
+	this.intervalBetweenSpinStop = 500;
 
 	this.isSpinning = false;
 
@@ -40,10 +40,9 @@ SlotMachine.prototype.setup = function() {
 SlotMachine.prototype.createMask = function() {
 	this.mask = new PIXI.Graphics();
 	this.mask.beginFill();
-	this.mask.drawRect(100, 90, 800, 435);
+	this.mask.drawRect(0, 92, window.innerWidth, 433);
 	this.mask.endFill();
-	this.mask.lineColor = "red";
-	 
+
 	addToScene(this.mask)
 }
 
@@ -64,14 +63,10 @@ SlotMachine.prototype.spin = function() {
 	this.isSpinning = true;
 
 	$.each(this.slotsCol, function(i, col) {
-		slotMachine.spinSlotCol(i, col);
+		col.startSpinning();
 	});
 
 	setTimeout(function() { slotMachine.endSpin(); }, slotMachine.spinDuration);
-};
-
-SlotMachine.prototype.spinSlotCol = function(index, col) {
-	col.startSpinning();
 };
 
 SlotMachine.prototype.endSpin = function() {
@@ -83,7 +78,7 @@ SlotMachine.prototype.endSpin = function() {
 
 	setTimeout(function() {
 		slotMachine.isSpinning = false;
-	}, this.slotsCol.length * this.intervalBetweenSpinStop + 500);
+	}, (this.slotsCol.length + 1) * this.intervalBetweenSpinStop);
 };
 
 SlotMachine.prototype.stopSpinSlotCol = function(index, col) {

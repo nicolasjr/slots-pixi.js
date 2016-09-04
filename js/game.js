@@ -59,14 +59,21 @@ function ready() {
 
 function addToScene(sprite) {
 	stage.addChild(sprite);
-	// render();
 }
 
 function removeFromScene(sprite) {
 	stage.removeChild(sprite);
-	// render();
 }
 
 function getSlotTypeFileName(type) {
 	return "images/" + type + ".png";
+}
+
+Array.prototype.contains = function(obj) {
+    var i = this.length;
+    while (i--)
+        if (this[i] === obj)
+            return true;
+        
+    return false;
 }

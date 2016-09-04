@@ -9,24 +9,30 @@ function SlotsCol(totalSlots, colId, mask) {
 	this.slots = [];
 	this.positionY = 0;
 	
-	this.anchorPosX = 125;
 	this.deltaPosX = 158;
+	this.anchorPosX = 125 + (this.id * this.deltaPosX);
 
 	this.anchorPosY = -50;
 	this.deltaPosY = 150;
 
 	this.spinSpeed = 0;
-	this.maxSpinSpeed = 26;
+	this.maxSpinSpeed = 25;
 
 	return this;
 }
 
 SlotsCol.prototype.create = function() {
-	const insertedTypes = [];
+	this.insertedTypes = [];
 	for(var i = 0; i < this.totalSlots; i++) {
 
-		// while ()
-		var pos = Math.floor(Math.random() * Slots.length);
+		var pos = 0;
+		do {
+			pos = Math.floor(Math.random() * Slots.length);
+			if (i >= Slots.length)
+				break;
+		} while (this.insertedTypes.contains(pos));
+		
+		this.insertedTypes.push(pos);
 
 		var slot = new Slot(Slots[pos], this.mask);
 		slot.create();
@@ -42,7 +48,7 @@ SlotsCol.prototype.positionSlotsInCol = function() {
 
 	var col = this;
 	$.each(this.slots, function(i, slot) {
-		slot.sprite.position.x = col.anchorPosX + (col.id * col.deltaPosX);
+		slot.sprite.position.x = col.anchorPosX;// + (col.id * col.deltaPosX);
 		slot.sprite.position.y = col.positionY + col.anchorPosY + (i * col.deltaPosY);
 	});
 }
@@ -90,17 +96,17 @@ SlotsCol.prototype.resetColPosition = function() {
 SlotsCol.prototype.endSpin = function() {
 	this.isSpinning = false;
 
-	this.endSpinAnimation();
+	// this.endSpinAnimation();
 
-	// var spinSpeed = this.spinSpeed;
-	// var col = this;
-	// $({ speed: 0 }).animate({ speed: spinSpeed }, {
-	// 	duration: 0,
-	// 	step: function(now) {
-	// 		col.moveSlotsWithSpeed(spinSpeed - now);
-	// 	},
-	// 	complete: function() { col.endSpinAnimation(); }
-	// });
+	var spinSpeed = this.spinSpeed;
+	var col = this;
+	$({ speed: 500 }).animate({ speed: spinSpeed }, {
+		duration: 0,
+		step: function(now) {
+			col.moveSlotsWithSpeed(spinSpeed - now);
+		},
+		complete: function() { col.endSpinAnimation(); }
+	});
 };
 
 SlotsCol.prototype.endSpinAnimation = function() {
@@ -108,12 +114,12 @@ SlotsCol.prototype.endSpinAnimation = function() {
 
 	const isCloserToEnd = col.positionY > col.deltaPosY * 0.66667 ;
 
-	const maxPos = isCloserToEnd ? 150 : col.positionY;
+	const maxPos = isCloserToEnd ? col.deltaPosY : col.positionY;
 	const minPos = isCloserToEnd ? col.positionY : 0;
 
 	$({ y: minPos }).animate({ y: maxPos }, {
-		duration: 750,
-		easing: "easeOutBounce",
+		duration: 500,
+		easing: "easeOutBack",
 		step: function(now) {
 			col.positionY = isCloserToEnd ? minPos + (now - minPos) : maxPos - now;
 			col.positionSlotsInCol();
