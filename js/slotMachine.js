@@ -13,10 +13,8 @@ function SlotMachine(totalReels) {
 
 	this.create = function() {
 		setup(); 
-		createMask();
-		createSlotsCol();
-
-		var slotMachine = this;
+		const mask = createMask();
+		createSlotsCol(mask);
 	};
 
 	this.update = function() {
@@ -34,17 +32,19 @@ function SlotMachine(totalReels) {
 	};
 
 	function createMask() {
-		this.mask = new PIXI.Graphics();
-		this.mask.beginFill();
-		this.mask.drawRect(0, 92, window.innerWidth, 433);
-		this.mask.endFill();
+		var mask = new PIXI.Graphics();
+		mask.beginFill();
+		mask.drawRect(0, 92, window.innerWidth, 433);
+		mask.endFill();
 
-		addToScene(this.mask)
+		addToScene(mask)
+
+		return mask;
 	}
 
-	function createSlotsCol() {
+	function createSlotsCol(mask) {
 		for (var i = 0; i < totalReels; i++) {
-			var col = new Reel(totalSlotsInReel, i, this.mask);
+			var col = new Reel(totalSlotsInReel, i, mask);
 			col.create();
 			reels.push(col);
 		}
@@ -63,8 +63,6 @@ function SlotMachine(totalReels) {
 	};
 
 	function endSpin() {
-		var slotMachine = this;
-
 		$.each(reels, function(i, reel) {
 			stopReelSpin(i, reel);
 		});
