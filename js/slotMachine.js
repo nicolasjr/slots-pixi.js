@@ -36,8 +36,8 @@ function SlotMachine(totalReels) {
 	};
 
 	function createMask() {
-		var mask = helper.createSquare({x: 0, y: 92, w: window.innerWidth, h: 433})
-		helper.addToScene(mask)
+		var mask = helper.createSquare(0, 92, window.innerWidth, 433);
+		helper.addToScene(mask);
 		return mask;
 	}
 

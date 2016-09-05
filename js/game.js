@@ -1,19 +1,3 @@
-const backgroundWidth = 1000;
-const backgroundHeight = 667;
-
-const stage = new PIXI.Container(),
-    renderer = PIXI.autoDetectRenderer(backgroundWidth, backgroundHeight);
-
-const Slots = [
-	"slot-dealer",
-	"slot-winner",
-	"slot-wildcard",
-	"slot-card-green",
-	"slot-card-red",
-	"slot-card-brown",
-	"slot-card-blue"
-];
-
 const helper = new Helper();
 const game = new Game();
 game.init();
@@ -31,6 +15,8 @@ function Game() {
 	const deltaCoinsToSpin = 10;
 	var onCoinsToSpinUpdate;
 
+	var isSpinning = false;
+
 	this.init = function() {
 
 		PIXI.loader
@@ -38,21 +24,17 @@ function Game() {
 			.add("images/machine.png")
 			.load(ready);
 
-		window.addEventListener("keydown", function(e) {
-		    if (e.keyCode === 13)
-		        spin();
-		    else if (e.keyCode === 187)
-		        increaseCurrentCoinsToSpin();
-		    else if (e.keyCode === 189)
-		        decreaseCurrentCoinsToSpin();
-		});
-
 		document.body.appendChild(renderer.view);
 
 		requestAnimationFrame(gameLoop);
 	};
 
 	function spin() {
+		if (isSpinning)
+			return;
+
+		isSpinning = true;
+
 		if (totalCoins - coinsToSpin < 0) {
 			alert("Not enough coins!");
 			return;
@@ -67,6 +49,8 @@ function Game() {
 	function spinResult(result) {
 		totalCoins += result;
 		onTotalCoinsUpdate(totalCoins);
+
+		isSpinning = false;
     };
 
     function gameLoop() {
@@ -87,7 +71,7 @@ function Game() {
 		const text = new PIXI.Text(totalCoins, {font:"50px Arial", fill:"white"});
 		text.position = { x: backgroundWidth / 2 - 30, y: backgroundHeight - 50};
 
-		const square = helper.createSquare({x: backgroundWidth / 2 - 40, y: backgroundHeight - 55, w: 75, h: 40});
+		const square = helper.createSquare(backgroundWidth / 2 - 40, backgroundHeight - 55, 75, 40);
 		square.addChild(text);
 		helper.addToScene(square);
 
@@ -100,7 +84,7 @@ function Game() {
 		const text = new PIXI.Text(coinsToSpin, {font:"50px Arial", fill:"white"});
         text.position = { x: backgroundWidth / 2 - 30, y: backgroundHeight - 100};
 
-		const square = helper.createSquare({x: backgroundWidth / 2 - 40, y: backgroundHeight - 105, w: 75, h: 40});
+		const square = helper.createSquare(backgroundWidth / 2 - 40, backgroundHeight - 105, 75, 40);
         square.addChild(text);
         helper.addToScene(square);
 
@@ -110,22 +94,20 @@ function Game() {
     };
 
     function createCurrentCoinsToSpinController() {
-		const decrease = helper.createSquare({x: backgroundWidth / 2 - 90, y: backgroundHeight - 105, w: 40, h: 40});
-		decrease.addChild(new PIXI.Text("-", {font:"50px Arial", fill:"white"}));
-		decrease.interactive = true;
+		const decrease = helper.createSquare(backgroundWidth / 2 - 90, backgroundHeight - 105, 40, 40)
+								.setInteractive(true);
 		decrease.on('mouseup', decreaseCurrentCoinsToSpin);
 		helper.addToScene(decrease);
 
-		const increase = helper.createSquare({x: backgroundWidth / 2 + 45, y: backgroundHeight - 105, w: 40, h: 40});
-		increase.addChild(new PIXI.Text("+", {font:"50px Arial", fill:"white"}));
-		increase.interactive = true;
+		const increase = helper.createSquare(backgroundWidth / 2 + 45, backgroundHeight - 105, 40, 40)
+								.setInteractive(true);
 		increase.on('mouseup', increaseCurrentCoinsToSpin);
 		helper.addToScene(increase);
     };
 
     function createSpinButton() {
-		const spinButton = helper.createSquare({x: backgroundWidth - 120, y: backgroundHeight - 105, w: 100, h: 100});
-		spinButton.interactive = true;
+		const spinButton = helper.createSquare(backgroundWidth - 120, backgroundHeight - 105, 100, 100)
+								 .setInteractive(true);
         spinButton.on('mouseup', spin);
         helper.addToScene(spinButton);
     }
@@ -148,16 +130,4 @@ function Game() {
 		coinsToSpin += delta;
 		onCoinsToSpinUpdate(coinsToSpin);
     };
-}
-
-Array.prototype.contains = function(obj) {
-    var i = this.length;
-    while (i--)
-        if (this[i] === obj)
-            return true;
-    return false;
-};
-
-Array.prototype.last = function(){
-    return this[this.length - 1];
 };
