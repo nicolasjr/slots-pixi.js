@@ -83,6 +83,9 @@ function Game() {
     };
 
     function changeCurrentCoinsToSpin(delta) {
+    	if (isSpinning)
+    		return;
+
 		bet += delta;
 		ui.updateBetLabel(bet);
     };

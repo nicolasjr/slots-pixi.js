@@ -32,6 +32,21 @@ function Helper() {
         return square;
     };
 
+    this.parentCenter = function(child) {
+        // child.anchor = { x: 0.5, y: 0.5 };
+        child.pivot = new PIXI.Point(child.width / 2, child.height / 2);
+
+    };
+
+    this.createCircle = function(x, y, r) {
+        var circle = new PIXI.Graphics();
+        circle.beginFill("#000");
+        circle.drawCircle(x, y, r);
+        circle.endFill();
+
+        return circle;
+    };
+
 	this.createSlotTypeFileNameArray = function(slotNameArray) {
 		var fileNameArray = [];
 		$.each(slotNameArray, function(i, name) {

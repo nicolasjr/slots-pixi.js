@@ -12,7 +12,7 @@ function GameUi() {
 	this.create = function() {
 		createCoinsLabel();
 		createBetLabel();
-		createCurrentCoinsToSpinController();
+		createCurrentBetController();
 		createSpinButton();
 	};
 
@@ -38,26 +38,33 @@ function GameUi() {
         helper.addToScene(square);
     };
 
-    function createCurrentCoinsToSpinController() {
-		const decrease = helper.createSquare(backgroundWidth / 2 - 90, backgroundHeight - 105, 40, 40).setInteractive(true);
-		decrease.on('mouseup', function() {
+    function createCurrentBetController() {
+    	const radius = 20;
+		helper.addToScene(createLabeledButton("-", backgroundWidth / 2 - 60, backgroundHeight - 85, radius, function() {
 			ui.onDecreaseCurrentBet();
-		});
-		helper.addToScene(decrease);
+		}));
 
-		const increase = helper.createSquare(backgroundWidth / 2 + 45, backgroundHeight - 105, 40, 40).setInteractive(true);
-		increase.on('mouseup', function() {
+		helper.addToScene(createLabeledButton("+", backgroundWidth / 2 + 55, backgroundHeight - 85, radius, function() {
 			ui.onIncreaseCurrentBet();
-		});
-		helper.addToScene(increase);
+		}));
+    };
+
+    function createLabeledButton(label, x, y, r, callback) {
+		const buttonLabel = new PIXI.Text(label, {font:"50px Arial", fill:"white"});
+		
+		const button = helper.createCircle(0, 0, r).setInteractive(true);
+		button.position = { x: x, y: y };
+		button.on('mouseup', callback);
+		button.addChild(buttonLabel);
+		helper.parentCenter(buttonLabel);
+
+		return button;
     };
 
     function createSpinButton() {
-		const spinButton = helper.createSquare(backgroundWidth - 120, backgroundHeight - 105, 100, 100).setInteractive(true);
-        spinButton.on('mouseup', function() {
-        	ui.onSpin();
-        });
-        helper.addToScene(spinButton);
+    	helper.addToScene(createLabeledButton("SPIN", backgroundWidth - 120, backgroundHeight - 75, 50, function() {
+			ui.onSpin();
+		}));
     };
 
     this.updateCoinsLabel = function(amount) {
