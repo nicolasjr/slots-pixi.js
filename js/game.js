@@ -6,14 +6,14 @@ function Game() {
 	const totalReels = 5;
 	var slotMachine = new SlotMachine(totalReels);
 
-	var totalCoins = 2000;
-	var onTotalCoinsUpdate;
+	var ui = new GameUi();
 
-	var coinsToSpin = 20;
-	const minCoinsToSpin = 20;
-	const maxCoinsToSpin = 100;
-	const deltaCoinsToSpin = 10;
-	var onCoinsToSpinUpdate;
+	var totalCoins = 2000;
+
+	var bet = 20;
+	const minBet = 20;
+	const maxBet = 100;
+	const deltaBet = 10;
 
 	var isSpinning = false;
 
@@ -35,20 +35,20 @@ function Game() {
 
 		isSpinning = true;
 
-		if (totalCoins - coinsToSpin < 0) {
+		if (totalCoins - bet < 0) {
 			alert("Not enough coins!");
 			return;
 		}
 
-		if (slotMachine.spin(coinsToSpin, spinResult)) {
-			totalCoins -= coinsToSpin;
-			onTotalCoinsUpdate(totalCoins);
+		if (slotMachine.spin(bet, spinResult)) {
+			totalCoins -= bet;
+			ui.updateCoinsLabel(totalCoins);
 		}
 	}
 
 	function spinResult(result) {
 		totalCoins += result;
-		onTotalCoinsUpdate(totalCoins);
+		ui.updateCoinsLabel(totalCoins);
 
 		isSpinning = false;
     };
@@ -61,73 +61,29 @@ function Game() {
 
     function ready() {
     	slotMachine.create();
-		createCoinsLabel();
-		createCoinsToSpinLabel();
-		createCurrentCoinsToSpinController();
-		createSpinButton();
+    	ui.create();
+    	ui.onSpin = spin;
+    	ui.onIncreaseCurrentBet = increaseCurrentBet;
+    	ui.onDecreaseCurrentBet = decreaseCurrentBet;
+    	ui.updateCoinsLabel(totalCoins).updateBetLabel(bet);
     };
 
-    function createCoinsLabel() {
-		const text = new PIXI.Text(totalCoins, {font:"50px Arial", fill:"white"});
-		text.position = { x: backgroundWidth / 2 - 30, y: backgroundHeight - 50};
-
-		const square = helper.createSquare(backgroundWidth / 2 - 40, backgroundHeight - 55, 75, 40);
-		square.addChild(text);
-		helper.addToScene(square);
-
-		onTotalCoinsUpdate = function(total) {
-			text.text = total;
-		};
-    };
-
-    function createCoinsToSpinLabel() {
-		const text = new PIXI.Text(coinsToSpin, {font:"50px Arial", fill:"white"});
-        text.position = { x: backgroundWidth / 2 - 30, y: backgroundHeight - 100};
-
-		const square = helper.createSquare(backgroundWidth / 2 - 40, backgroundHeight - 105, 75, 40);
-        square.addChild(text);
-        helper.addToScene(square);
-
-        onCoinsToSpinUpdate = function(total) {
-            text.text = total;
-        };
-    };
-
-    function createCurrentCoinsToSpinController() {
-		const decrease = helper.createSquare(backgroundWidth / 2 - 90, backgroundHeight - 105, 40, 40)
-								.setInteractive(true);
-		decrease.on('mouseup', decreaseCurrentCoinsToSpin);
-		helper.addToScene(decrease);
-
-		const increase = helper.createSquare(backgroundWidth / 2 + 45, backgroundHeight - 105, 40, 40)
-								.setInteractive(true);
-		increase.on('mouseup', increaseCurrentCoinsToSpin);
-		helper.addToScene(increase);
-    };
-
-    function createSpinButton() {
-		const spinButton = helper.createSquare(backgroundWidth - 120, backgroundHeight - 105, 100, 100)
-								 .setInteractive(true);
-        spinButton.on('mouseup', spin);
-        helper.addToScene(spinButton);
-    }
-
-    function increaseCurrentCoinsToSpin() {
-        if (coinsToSpin + deltaCoinsToSpin > maxCoinsToSpin)
+    function increaseCurrentBet() {
+        if (bet + deltaBet > maxBet)
             return;
 
-		changeCurrentCoinsToSpin(deltaCoinsToSpin);
+		changeCurrentCoinsToSpin(deltaBet);
     };
 
-    function decreaseCurrentCoinsToSpin() {
-        if (coinsToSpin - deltaCoinsToSpin < minCoinsToSpin)
+    function decreaseCurrentBet() {
+        if (bet - deltaBet < minBet)
             return;
 
-		changeCurrentCoinsToSpin(deltaCoinsToSpin * -1);
+		changeCurrentCoinsToSpin(deltaBet * -1);
     };
 
     function changeCurrentCoinsToSpin(delta) {
-		coinsToSpin += delta;
-		onCoinsToSpinUpdate(coinsToSpin);
+		bet += delta;
+		ui.updateBetLabel(bet);
     };
 };
