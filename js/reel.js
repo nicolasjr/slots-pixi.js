@@ -35,7 +35,7 @@ function Reel(totalSlots, colId, mask) {
 			slot.create();
 			slots.push(slot);
 			
-			addToScene(slot.sprite);
+			helper.addToScene(slot.sprite);
 		}
 
 		positionSlotsInCol();
@@ -114,6 +114,15 @@ function Reel(totalSlots, colId, mask) {
 		});
 	}
 
+	this.getResult = function() {
+		const result = [];
+
+		for (var i = 1; i <= 3; i++)
+			result.push(slots[i]);
+
+		return result;
+	}
+
 	return this;
-}
+};
 

@@ -6,10 +6,14 @@ function SlotMachine(totalReels) {
 
 	const backgroundImage = "images/machine.png";
 	const spinDuration = 1500;
-
 	const intervalBetweenSpinStop = 500;
 
+	const gameResult = new GameResult();
+
+	var onSpinEnded;
 	var isSpinning = false;
+
+	var coinsInSpin;
 
 	this.create = function() {
 		setup(); 
@@ -28,17 +32,12 @@ function SlotMachine(totalReels) {
 		background.width = backgroundWidth;
 		background.height = backgroundHeight;
 
-		addToScene(background);
+		helper.addToScene(background);
 	};
 
 	function createMask() {
-		var mask = new PIXI.Graphics();
-		mask.beginFill();
-		mask.drawRect(0, 92, window.innerWidth, 433);
-		mask.endFill();
-
-		addToScene(mask)
-
+		var mask = helper.createSquare({x: 0, y: 92, w: window.innerWidth, h: 433})
+		helper.addToScene(mask)
 		return mask;
 	}
 
@@ -50,9 +49,12 @@ function SlotMachine(totalReels) {
 		}
 	};
 
-	this.spin = function() {
+	this.spin = function(coins, callback) {
 		if (isSpinning)
-			return;
+			return false;
+
+		onSpinEnded = callback;
+		coinsInSpin = coins;
 
 		isSpinning = true;
 		$.each(reels, function(i, reel) {
@@ -60,6 +62,8 @@ function SlotMachine(totalReels) {
 		});
 
 		setTimeout(function() { endSpin(); }, spinDuration);
+
+		return true;
 	};
 
 	function endSpin() {
@@ -69,7 +73,9 @@ function SlotMachine(totalReels) {
 
 		setTimeout(function() {
 			isSpinning = false;
-		}, (reels.length + 1) * intervalBetweenSpinStop);
+
+			calculateGameResult();
+		}, (reels.length) * intervalBetweenSpinStop);
 	};
 
 	function stopReelSpin(index, reel) {
@@ -78,5 +84,14 @@ function SlotMachine(totalReels) {
 		}, index * intervalBetweenSpinStop);
 	};
 
+	function calculateGameResult() {
+		const resultReels = []
+        $.each(reels, function(i, reel) {
+            resultReels.push(reel.getResult());
+        });
+
+		onSpinEnded(gameResult.calculateResult(coinsInSpin, resultReels));
+	}
+
 	return this;
-}
+};

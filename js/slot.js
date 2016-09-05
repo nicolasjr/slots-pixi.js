@@ -1,7 +1,7 @@
 function Slot(slotType, mask) {
 	this.type = slotType;
 	
-	const spritePath = getSlotTypeFileName(this.type);
+	const spritePath = helper.getSlotTypeFileName(this.type);
 	const spriteSize = 120;
 
  	this.create = function() {
@@ -12,4 +12,4 @@ function Slot(slotType, mask) {
 	}
 
  	return this;
-}
+};

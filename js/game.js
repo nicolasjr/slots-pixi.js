@@ -1,10 +1,10 @@
 const backgroundWidth = 1000;
 const backgroundHeight = 667;
 
-var stage = new PIXI.Container(),
+const stage = new PIXI.Container(),
     renderer = PIXI.autoDetectRenderer(backgroundWidth, backgroundHeight);
 
-var Slots = [
+const Slots = [
 	"slot-dealer",
 	"slot-winner",
 	"slot-wildcard",
@@ -14,59 +14,119 @@ var Slots = [
 	"slot-card-blue"
 ];
 
-initialize();
+const helper = new Helper();
+const game = new Game();
+game.init();
 
-const totalReels = 5;
-var slotMachine = new SlotMachine(totalReels);
+function Game() {
+	const totalReels = 5;
+	var slotMachine = new SlotMachine(totalReels);
 
-function initialize() {
-	PIXI.loader
-		.add(createSlotTypeFileNameArray(Slots))
-		.add("images/machine.png")
-		.load(ready);
+	var totalCoins = 2000;
+	var onTotalCoinsUpdate;
 
-	window.addEventListener("keydown", function(e) {
-	    if (e.keyCode === 13)
-	        slotMachine.spin();
-	});
+	var coinsToSpin = 20;
+	const minCoinsToSpin = 20;
+	const maxCoinsToSpin = 100;
+	const deltaCoinsToSpin = 10;
+	var onCoinsToSpinUpdate;
 
-	document.body.appendChild(renderer.view);
+	this.init = function() {
 
-	var p = document.createElement("p");
-	p.innerHTML = "Press ENTER/RETURN to spin";
-	document.body.appendChild(p);
+		PIXI.loader
+			.add(helper.createSlotTypeFileNameArray(Slots))
+			.add("images/machine.png")
+			.load(ready);
 
-	requestAnimationFrame(gameLoop);
-}
+		window.addEventListener("keydown", function(e) {
+			console.log(e.keyCode);
 
-function gameLoop() {
-	requestAnimationFrame(gameLoop);
-	slotMachine.update();
-	renderer.render(stage);
-}
+		    if (e.keyCode === 13)
+		        spin();
+		    else if (e.keyCode === 187)
+		        increaseCurrentCoinsToSpin();
+		    else if (e.keyCode === 189)
+		        decreaseCurrentCoinsToSpin();
+		});
 
-function ready() {
-	slotMachine.create();
-}
+		document.body.appendChild(renderer.view);
 
-function addToScene(sprite) {
-	stage.addChild(sprite);
-}
+		requestAnimationFrame(gameLoop);
+	};
 
-function removeFromScene(sprite) {
-	stage.removeChild(sprite);
-}
+	function spin() {
+		if (totalCoins - coinsToSpin < 0) {
+			alert("Not enough coins!");
+			return;
+		}
 
-function createSlotTypeFileNameArray(slotNameArray) {
-	var fileNameArray = [];
-	$.each(slotNameArray, function(i, name) {
-		fileNameArray.push(getSlotTypeFileName(name));
-	});
-	return fileNameArray;
-}
+		if (slotMachine.spin(coinsToSpin, spinResult)) {
+			totalCoins -= coinsToSpin;
+			onTotalCoinsUpdate(totalCoins);
+		}
+	}
 
-function getSlotTypeFileName(type) {
-	return "images/" + type + ".png";
+	function spinResult(result) {
+		totalCoins += result;
+		onTotalCoinsUpdate(totalCoins);
+    };
+
+    function gameLoop() {
+    	requestAnimationFrame(gameLoop);
+    	slotMachine.update();
+    	renderer.render(stage);
+    };
+
+    function ready() {
+    	slotMachine.create();
+		createCoinsLabel();
+		createCoinsToSpinLabel();
+    };
+
+    function createCoinsLabel() {
+		const text = new PIXI.Text(totalCoins, {font:"50px Arial", fill:"white"});
+		text.position = { x: backgroundWidth / 2 - 30, y: backgroundHeight - 50};
+
+		const square = helper.createSquare({x: backgroundWidth / 2 - 40, y: backgroundHeight - 55, w: 75, h: 40});
+		square.addChild(text);
+		helper.addToScene(square);
+
+		onTotalCoinsUpdate = function(total) {
+			text.text = total;
+		};
+    };
+
+    function createCoinsToSpinLabel() {
+		const text = new PIXI.Text(coinsToSpin, {font:"50px Arial", fill:"white"});
+        text.position = { x: backgroundWidth / 2 - 30, y: backgroundHeight - 100};
+
+		const square = helper.createSquare({x: backgroundWidth / 2 - 40, y: backgroundHeight - 105, w: 75, h: 40});
+        square.addChild(text);
+        helper.addToScene(square);
+
+        onCoinsToSpinUpdate = function(total) {
+            text.text = total;
+        };
+    };
+
+    function increaseCurrentCoinsToSpin() {
+        if (coinsToSpin + deltaCoinsToSpin > maxCoinsToSpin)
+            return;
+
+		changeCurrentCoinsToSpin(deltaCoinsToSpin);
+    };
+
+    function decreaseCurrentCoinsToSpin() {
+        if (coinsToSpin - deltaCoinsToSpin < minCoinsToSpin)
+            return;
+
+		changeCurrentCoinsToSpin(deltaCoinsToSpin * -1);
+    };
+
+    function changeCurrentCoinsToSpin(delta) {
+		coinsToSpin += delta;
+		onCoinsToSpinUpdate(coinsToSpin);
+    };
 }
 
 Array.prototype.contains = function(obj) {
@@ -75,7 +135,7 @@ Array.prototype.contains = function(obj) {
         if (this[i] === obj)
             return true;
     return false;
-}
+};
 
 Array.prototype.last = function(){
     return this[this.length - 1];
