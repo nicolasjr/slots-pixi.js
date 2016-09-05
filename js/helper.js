@@ -33,9 +33,7 @@ function Helper() {
     };
 
     this.parentCenter = function(child) {
-        // child.anchor = { x: 0.5, y: 0.5 };
         child.pivot = new PIXI.Point(child.width / 2, child.height / 2);
-
     };
 
     this.createCircle = function(x, y, r) {
@@ -66,7 +64,7 @@ function Helper() {
         button.position = { x: x, y: y };
         button.on('mouseup', callback);
         button.addChild(buttonLabel);
-        helper.parentCenter(buttonLabel);
+        this.parentCenter(buttonLabel);
 
         return button;
     };

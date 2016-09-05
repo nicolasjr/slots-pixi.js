@@ -22,18 +22,22 @@ function GameUi() {
 
 	function createCoinsLabel() {
 		coinsLabel = new PIXI.Text("", {font:"50px Arial", fill:"white"});
-		coinsLabel.position = { x: backgroundWidth / 2 - 30, y: backgroundHeight - 50};
+		helper.parentCenter(coinsLabel);
+		coinsLabel.position = { x: 15, y: 20};
 
-		const square = helper.createSquare(backgroundWidth / 2 - 40, backgroundHeight - 55, 75, 40);
+		const square = helper.createSquare(0, 0, 80, 40);
+		square.position.set(backgroundWidth / 2 - 40, backgroundHeight - 55);
 		square.addChild(coinsLabel);
 		helper.addToScene(square);
     };
 
     function createBetLabel() {
 		betLabel = new PIXI.Text("", {font:"50px Arial", fill:"white"});
-        betLabel.position = { x: backgroundWidth / 2 - 30, y: backgroundHeight - 100};
+		helper.parentCenter(betLabel);
+        betLabel.position = { x: 22.5, y: 20};
 
-		const square = helper.createSquare(backgroundWidth / 2 - 40, backgroundHeight - 105, 75, 40);
+		const square = helper.createSquare(0, 0, 80, 40);
+		square.position.set(backgroundWidth / 2 - 40, backgroundHeight - 105);
         square.addChild(betLabel);
         helper.addToScene(square);
     };
@@ -44,7 +48,7 @@ function GameUi() {
 			ui.onDecreaseCurrentBet();
 		}));
 
-		helper.addToScene(helper.createLabeledRoundButton("+", backgroundWidth / 2 + 55, backgroundHeight - 85, radius, function() {
+		helper.addToScene(helper.createLabeledRoundButton("+", backgroundWidth / 2 + 60, backgroundHeight - 85, radius, function() {
 			ui.onIncreaseCurrentBet();
 		}));
     };

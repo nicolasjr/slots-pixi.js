@@ -44,7 +44,7 @@ function Game() {
 			totalCoins -= bet;
 			ui.updateCoinsLabel(totalCoins);
 		}
-	}
+	};
 
 	function spinResult(result) {
 		totalCoins += result;
