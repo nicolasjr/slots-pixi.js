@@ -1,4 +1,4 @@
-function SlotsCol(totalSlots, colId, mask) {
+function Reel(totalSlots, colId, mask) {
 
 	this.totalSlots = totalSlots;
 	this.id = colId;
@@ -12,16 +12,18 @@ function SlotsCol(totalSlots, colId, mask) {
 	this.deltaPosX = 158;
 	this.anchorPosX = 125 + (this.id * this.deltaPosX);
 
-	this.anchorPosY = -50;
 	this.deltaPosY = 150;
+	this.anchorPosY = -50;
 
 	this.spinSpeed = 0;
 	this.maxSpinSpeed = 25;
 
+	this.animationSpeed;
+
 	return this;
 }
 
-SlotsCol.prototype.create = function() {
+Reel.prototype.create = function() {
 	this.insertedTypes = [];
 	for(var i = 0; i < this.totalSlots; i++) {
 
@@ -44,35 +46,35 @@ SlotsCol.prototype.create = function() {
 	this.positionSlotsInCol();
 };
 
-SlotsCol.prototype.positionSlotsInCol = function() {
+Reel.prototype.positionSlotsInCol = function() {
 
-	var col = this;
+	var reel = this;
 	$.each(this.slots, function(i, slot) {
-		slot.sprite.position.x = col.anchorPosX;// + (col.id * col.deltaPosX);
-		slot.sprite.position.y = col.positionY + col.anchorPosY + (i * col.deltaPosY);
+		slot.sprite.position.x = reel.anchorPosX;
+		slot.sprite.position.y = reel.positionY + reel.anchorPosY + (i * reel.deltaPosY);
 	});
 }
 
-SlotsCol.prototype.spin = function() {
+Reel.prototype.spin = function() {
 	if (!this.isSpinning)
 		return;
 
 	this.moveSlotsWithSpeed(this.spinSpeed);
 };
 
-SlotsCol.prototype.startSpinning = function() {
+Reel.prototype.startSpinning = function() {
 	this.isSpinning = true;
 
-	var col = this;
-	$({ speed: 0 }).animate({ speed: col.maxSpinSpeed }, {
-		duration: 1000,
+	var reel = this;
+	$({ speed: 0 }).animate({ speed: reel.maxSpinSpeed }, {
+		duration: reel.animationSpeed,
 		step: function(now) {
-			col.spinSpeed = now;
+			reel.spinSpeed = now;
 		}
 	});
 };
 
-SlotsCol.prototype.moveSlotsWithSpeed = function(speed) {
+Reel.prototype.moveSlotsWithSpeed = function(speed) {
 	$.each(this.slots, function(i, slot) {
 		slot.sprite.position.y += speed;
 	});
@@ -83,8 +85,8 @@ SlotsCol.prototype.moveSlotsWithSpeed = function(speed) {
 		this.resetColPosition();
 };
 
-SlotsCol.prototype.resetColPosition = function() {
-	var lastSlot = this.slots[this.slots.length - 1];
+Reel.prototype.resetColPosition = function() {
+	var lastSlot = this.slots.last();
 	this.slots.pop(lastSlot);
 
 	this.slots.splice(0, 0, lastSlot);
@@ -93,37 +95,32 @@ SlotsCol.prototype.resetColPosition = function() {
 	lastSlot.sprite.position.y = this.slots[1].sprite.position.y - this.deltaPosY;
 };
 
-SlotsCol.prototype.endSpin = function() {
+Reel.prototype.endSpin = function() {
 	this.isSpinning = false;
 
 	var spinSpeed = this.spinSpeed;
-	var col = this;
-	$({ speed: 500 }).animate({ speed: spinSpeed }, {
+	var reel = this;
+	$({ speed: reel.animationSpeed }).animate({ speed: spinSpeed }, {
 		duration: 0,
 		step: function(now) {
-			col.moveSlotsWithSpeed(spinSpeed - now);
+			reel.moveSlotsWithSpeed(spinSpeed - now);
 		},
-		complete: function() { col.endSpinAnimation(); }
+		complete: function() { reel.endSpinAnimation(); }
 	});
 };
 
-SlotsCol.prototype.endSpinAnimation = function() {
-	var col = this;
+Reel.prototype.endSpinAnimation = function() {
+	var reel = this;
 
-	const isCloserToEnd = col.positionY > col.deltaPosY * 0.66667 ;
-
-	const maxPos = isCloserToEnd ? col.deltaPosY : col.positionY;
-	const minPos = isCloserToEnd ? col.positionY : 0;
+	const minPos = 0;
+	const maxPos = reel.positionY;
 
 	$({ y: minPos }).animate({ y: maxPos }, {
-		duration: 500,
-		easing: "easeOutBack",
+		duration: 1000,
+		easing: "easeOutElastic",
 		step: function(now) {
-			col.positionY = isCloserToEnd ? minPos + (now - minPos) : maxPos - now;
-			col.positionSlotsInCol();
-		},
-		complete: function() { 
-			if (isCloserToEnd) col.resetColPosition(); 
+			reel.positionY = maxPos - now;
+			reel.positionSlotsInCol();
 		}
 	});
 }

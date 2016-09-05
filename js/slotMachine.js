@@ -1,9 +1,9 @@
-function SlotMachine(totalSlotsCol) {
+function SlotMachine(totalReels) {
 
-	this.slotsCol = [];
+	this.reels = [];
 
-	this.totalSlotsInCol = 15;
-	this.totalSlotsCol = totalSlotsCol;
+	this.totalSlotsInReel = 15;
+	this.totalReels = totalReels;
 
 	this.backgroundImage = "images/machine.png";
 	this.spinDuration = 1500;
@@ -24,8 +24,8 @@ SlotMachine.prototype.create = function() {
 };
 
 SlotMachine.prototype.update = function() {
-	$.each(this.slotsCol, function(i, col) {
-		col.spin();
+	$.each(this.reels, function(i, reel) {
+		reel.spin();
 	});
 };
 
@@ -47,10 +47,10 @@ SlotMachine.prototype.createMask = function() {
 }
 
 SlotMachine.prototype.createSlotsCol = function() {
-	for (var i = 0; i < this.totalSlotsCol; i++) {
-		var col = new SlotsCol(this.totalSlotsInCol, i, this.mask);
+	for (var i = 0; i < this.totalReels; i++) {
+		var col = new Reel(this.totalSlotsInReel, i, this.mask);
 		col.create();
-		this.slotsCol.push(col);
+		this.reels.push(col);
 	}
 };
 
@@ -62,7 +62,7 @@ SlotMachine.prototype.spin = function() {
 
 	this.isSpinning = true;
 
-	$.each(this.slotsCol, function(i, col) {
+	$.each(this.reels, function(i, col) {
 		col.startSpinning();
 	});
 
@@ -72,13 +72,13 @@ SlotMachine.prototype.spin = function() {
 SlotMachine.prototype.endSpin = function() {
 	var slotMachine = this;
 
-	$.each(this.slotsCol, function(i, col) {
+	$.each(this.reels, function(i, col) {
 		slotMachine.stopSpinSlotCol(i, col);
 	});
 
 	setTimeout(function() {
 		slotMachine.isSpinning = false;
-	}, (this.slotsCol.length + 1) * this.intervalBetweenSpinStop);
+	}, (this.reels.length + 1) * this.intervalBetweenSpinStop);
 };
 
 SlotMachine.prototype.stopSpinSlotCol = function(index, col) {

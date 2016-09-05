@@ -14,27 +14,20 @@ var Slots = [
 	"slot-card-blue"
 ];
 
-var slotMachine = new SlotMachine(5);
-
 initialize();
 
+const totalReels = 5;
+var slotMachine = new SlotMachine(totalReels);
+
 function initialize() {
-	// renderer.autoResize = true;
 	PIXI.loader
-		.add(getSlotTypeFileName(Slots[0]))
-		.add(getSlotTypeFileName(Slots[1]))
-		.add(getSlotTypeFileName(Slots[2]))
-		.add(getSlotTypeFileName(Slots[3]))
-		.add(getSlotTypeFileName(Slots[4]))
-		.add(getSlotTypeFileName(Slots[5]))
-		.add(getSlotTypeFileName(Slots[6]))
+		.add(createSlotTypeFileNameArray(Slots))
 		.add("images/machine.png")
 		.load(ready);
 
-	window.addEventListener("keydown", function(e){
-	    if (e.keyCode === 13) {
+	window.addEventListener("keydown", function(e) {
+	    if (e.keyCode === 13)
 	        slotMachine.spin();
-	    }
 	});
 
 	document.body.appendChild(renderer.view);
@@ -45,7 +38,6 @@ function initialize() {
 
 	requestAnimationFrame(gameLoop);
 }
-
 
 function gameLoop() {
 	requestAnimationFrame(gameLoop);
@@ -65,6 +57,14 @@ function removeFromScene(sprite) {
 	stage.removeChild(sprite);
 }
 
+function createSlotTypeFileNameArray(slotNameArray) {
+	var fileNameArray = [];
+	$.each(slotNameArray, function(i, name) {
+		fileNameArray.push(getSlotTypeFileName(name));
+	});
+	return fileNameArray;
+}
+
 function getSlotTypeFileName(type) {
 	return "images/" + type + ".png";
 }
@@ -74,6 +74,9 @@ Array.prototype.contains = function(obj) {
     while (i--)
         if (this[i] === obj)
             return true;
-        
     return false;
 }
+
+Array.prototype.last = function(){
+    return this[this.length - 1];
+};
