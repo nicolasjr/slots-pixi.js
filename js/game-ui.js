@@ -40,29 +40,17 @@ function GameUi() {
 
     function createCurrentBetController() {
     	const radius = 20;
-		helper.addToScene(createLabeledButton("-", backgroundWidth / 2 - 60, backgroundHeight - 85, radius, function() {
+		helper.addToScene(helper.createLabeledRoundButton("-", backgroundWidth / 2 - 60, backgroundHeight - 85, radius, function() {
 			ui.onDecreaseCurrentBet();
 		}));
 
-		helper.addToScene(createLabeledButton("+", backgroundWidth / 2 + 55, backgroundHeight - 85, radius, function() {
+		helper.addToScene(helper.createLabeledRoundButton("+", backgroundWidth / 2 + 55, backgroundHeight - 85, radius, function() {
 			ui.onIncreaseCurrentBet();
 		}));
     };
 
-    function createLabeledButton(label, x, y, r, callback) {
-		const buttonLabel = new PIXI.Text(label, {font:"50px Arial", fill:"white"});
-		
-		const button = helper.createCircle(0, 0, r).setInteractive(true);
-		button.position = { x: x, y: y };
-		button.on('mouseup', callback);
-		button.addChild(buttonLabel);
-		helper.parentCenter(buttonLabel);
-
-		return button;
-    };
-
     function createSpinButton() {
-    	helper.addToScene(createLabeledButton("SPIN", backgroundWidth - 120, backgroundHeight - 75, 50, function() {
+    	helper.addToScene(helper.createLabeledRoundButton("SPIN", backgroundWidth - 120, backgroundHeight - 75, 50, function() {
 			ui.onSpin();
 		}));
     };

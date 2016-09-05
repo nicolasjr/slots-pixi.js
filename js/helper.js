@@ -58,6 +58,18 @@ function Helper() {
 	this.getSlotTypeFileName = function(type) {
 		return "images/" + type + ".png";
 	};
+
+    this.createLabeledRoundButton = function(label, x, y, r, callback) {
+        const buttonLabel = new PIXI.Text(label, {font:"50px Arial", fill:"white"});
+        
+        const button = helper.createCircle(0, 0, r).setInteractive(true);
+        button.position = { x: x, y: y };
+        button.on('mouseup', callback);
+        button.addChild(buttonLabel);
+        helper.parentCenter(buttonLabel);
+
+        return button;
+    };
 }
 
 Array.prototype.contains = function(obj) {
