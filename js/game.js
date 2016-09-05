@@ -39,8 +39,6 @@ function Game() {
 			.load(ready);
 
 		window.addEventListener("keydown", function(e) {
-			console.log(e.keyCode);
-
 		    if (e.keyCode === 13)
 		        spin();
 		    else if (e.keyCode === 187)
@@ -81,6 +79,8 @@ function Game() {
     	slotMachine.create();
 		createCoinsLabel();
 		createCoinsToSpinLabel();
+		createCurrentCoinsToSpinController();
+		createSpinButton();
     };
 
     function createCoinsLabel() {
@@ -108,6 +108,27 @@ function Game() {
             text.text = total;
         };
     };
+
+    function createCurrentCoinsToSpinController() {
+		const decrease = helper.createSquare({x: backgroundWidth / 2 - 90, y: backgroundHeight - 105, w: 40, h: 40});
+		decrease.addChild(new PIXI.Text("-", {font:"50px Arial", fill:"white"}));
+		decrease.interactive = true;
+		decrease.on('mouseup', decreaseCurrentCoinsToSpin);
+		helper.addToScene(decrease);
+
+		const increase = helper.createSquare({x: backgroundWidth / 2 + 45, y: backgroundHeight - 105, w: 40, h: 40});
+		increase.addChild(new PIXI.Text("+", {font:"50px Arial", fill:"white"}));
+		increase.interactive = true;
+		increase.on('mouseup', increaseCurrentCoinsToSpin);
+		helper.addToScene(increase);
+    };
+
+    function createSpinButton() {
+		const spinButton = helper.createSquare({x: backgroundWidth - 120, y: backgroundHeight - 105, w: 100, h: 100});
+		spinButton.interactive = true;
+        spinButton.on('mouseup', spin);
+        helper.addToScene(spinButton);
+    }
 
     function increaseCurrentCoinsToSpin() {
         if (coinsToSpin + deltaCoinsToSpin > maxCoinsToSpin)
