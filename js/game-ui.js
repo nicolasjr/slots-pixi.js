@@ -30,14 +30,14 @@ function GameUi() {
     	const l = new PIXI.Text("", {font:"50px Arial", fill:"white"})
     	l.position = pos;
     	return l;
-    }
+    };
 
     function createSquare(width, height, pos, child) {
     	const square = helper.createSquare(0, 0, width, height);
 		square.position = pos;
         square.addChild(child);
         return square;
-    }
+    };
 
     function createCurrentBetController() {
     	const radius = 20;

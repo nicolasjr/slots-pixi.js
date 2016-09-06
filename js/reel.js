@@ -46,7 +46,7 @@ function Reel(totalSlots, colId, mask) {
 			slot.sprite.position.x = anchorPosX;
 			slot.sprite.position.y = positionY + anchorPosY + (i * deltaPosY);
 		});
-	}
+	};
 
 	this.spin = function() {
 		if (!isSpinning)
@@ -112,7 +112,7 @@ function Reel(totalSlots, colId, mask) {
 				positionSlotsInCol();
 			}
 		});
-	}
+	};
 
 	this.getResult = function() {
 		const result = [];
@@ -121,7 +121,7 @@ function Reel(totalSlots, colId, mask) {
 			result.push(slots[i]);
 
 		return result;
-	}
+	};
 
 	return this;
 };

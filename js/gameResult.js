@@ -8,14 +8,14 @@ function GameResult() {
 		score += checkCols(reels);
 
 		return score;
-	}
+	};
 
 	function checkLines(reels) {
 		return 0;
-	}
+	};
 
 	function checkCols(reels) {
 		return 0;
-	}
+	};
 
 };

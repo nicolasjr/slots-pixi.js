@@ -70,7 +70,7 @@ function Helper() {
 
         return button;
     };
-}
+};
 
 Array.prototype.contains = function(obj) {
     var i = this.length;

@@ -9,7 +9,7 @@ function Slot(slotType, mask) {
 		this.sprite.width = spriteSize;
 		this.sprite.height = spriteSize;
 		this.sprite.mask = mask;
-	}
+	};
 
  	return this;
 };

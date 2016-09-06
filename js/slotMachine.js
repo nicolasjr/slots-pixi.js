@@ -39,7 +39,7 @@ function SlotMachine(totalReels) {
 		var mask = helper.createSquare(0, 92, window.innerWidth, 433);
 		helper.addToScene(mask);
 		return mask;
-	}
+	};
 
 	function createSlotsCol(mask) {
 		for (var i = 0; i < totalReels; i++) {
@@ -91,7 +91,7 @@ function SlotMachine(totalReels) {
         });
 
 		onSpinEnded(gameResult.calculateResult(coinsInSpin, resultReels));
-	}
+	};
 
 	return this;
 };
