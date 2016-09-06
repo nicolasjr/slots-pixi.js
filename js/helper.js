@@ -64,6 +64,7 @@ function Helper() {
         const button = helper.createCircle(0, 0, r).setInteractive(true);
         button.position = { x: x, y: y };
         button.on('mouseup', callback);
+        button.on('touchend', callback);
         button.addChild(buttonLabel);
         this.parentCenter(buttonLabel);
 
