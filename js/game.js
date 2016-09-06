@@ -69,23 +69,30 @@ function Game() {
     };
 
     function increaseCurrentBet() {
-        if (bet + deltaBet > maxBet)
+    	if (isSpinning)
+    		return;
+    	
+        if (bet + deltaBet > maxBet) {
+        	alert("You're already betting maximum.");
             return;
+        }
 
 		changeCurrentCoinsToSpin(deltaBet);
     };
 
     function decreaseCurrentBet() {
-        if (bet - deltaBet < minBet)
+    	if (isSpinning)
+    		return;
+
+        if (bet - deltaBet < minBet) {
+        	alert("You're already betting minimum.");
             return;
+        }
 
 		changeCurrentCoinsToSpin(deltaBet * -1);
     };
 
     function changeCurrentCoinsToSpin(delta) {
-    	if (isSpinning)
-    		return;
-
 		bet += delta;
 		ui.updateBetLabel(bet);
     };

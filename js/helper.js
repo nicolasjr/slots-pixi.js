@@ -34,6 +34,7 @@ function Helper() {
 
     this.parentCenter = function(child) {
         child.pivot = new PIXI.Point(child.width / 2, child.height / 2);
+        return child;
     };
 
     this.createCircle = function(x, y, r) {

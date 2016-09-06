@@ -21,8 +21,7 @@ function GameUi() {
 	};
 
 	function createCoinsLabel() {
-		coinsLabel = new PIXI.Text("", {font:"50px Arial", fill:"white"});
-		helper.parentCenter(coinsLabel);
+		coinsLabel = helper.parentCenter(new PIXI.Text("", {font:"50px Arial", fill:"white"}));
 		coinsLabel.position = { x: 15, y: 20};
 
 		const square = helper.createSquare(0, 0, 80, 40);
@@ -32,8 +31,7 @@ function GameUi() {
     };
 
     function createBetLabel() {
-		betLabel = new PIXI.Text("", {font:"50px Arial", fill:"white"});
-		helper.parentCenter(betLabel);
+		betLabel = helper.parentCenter(new PIXI.Text("", {font:"50px Arial", fill:"white"}));
         betLabel.position = { x: 22.5, y: 20};
 
 		const square = helper.createSquare(0, 0, 80, 40);
