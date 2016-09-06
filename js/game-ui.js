@@ -16,43 +16,49 @@ function GameUi() {
 		createSpinButton();
 	};
 
-	this.updateCurrentBet = function() {
-
-	};
-
 	function createCoinsLabel() {
-		coinsLabel = helper.parentCenter(new PIXI.Text("", {font:"50px Arial", fill:"white"}));
-		coinsLabel.position = { x: 15, y: 20};
-
-		const square = helper.createSquare(0, 0, 80, 40);
-		square.position.set(backgroundWidth / 2 - 40, backgroundHeight - 55);
-		square.addChild(coinsLabel);
-		helper.addToScene(square);
+		coinsLabel = helper.parentCenter(createLabel({ x: 15, y: 20}));
+		helper.addToScene(createSquare(80, 40, {x: backgroundWidth / 2 - 40, y: backgroundHeight - 55}, coinsLabel));
     };
 
     function createBetLabel() {
-		betLabel = helper.parentCenter(new PIXI.Text("", {font:"50px Arial", fill:"white"}));
-        betLabel.position = { x: 22.5, y: 20};
-
-		const square = helper.createSquare(0, 0, 80, 40);
-		square.position.set(backgroundWidth / 2 - 40, backgroundHeight - 105);
-        square.addChild(betLabel);
-        helper.addToScene(square);
+		betLabel = helper.parentCenter(createLabel({ x: 22.5, y: 20}));
+        helper.addToScene(createSquare(80, 40, {x: backgroundWidth / 2 - 40, y: backgroundHeight - 105}, betLabel));
     };
+
+    function createLabel(pos) {
+    	const l = new PIXI.Text("", {font:"50px Arial", fill:"white"})
+    	l.position = pos;
+    	return l;
+    }
+
+    function createSquare(width, height, pos, child) {
+    	const square = helper.createSquare(0, 0, width, height);
+		square.position = pos;
+        square.addChild(child);
+        return square;
+    }
 
     function createCurrentBetController() {
     	const radius = 20;
-		helper.addToScene(helper.createLabeledRoundButton("-", backgroundWidth / 2 - 60, backgroundHeight - 85, radius, function() {
+    	var x = backgroundWidth / 2 - 60;
+    	var y = backgroundHeight - 85;
+		helper.addToScene(helper.createLabeledRoundButton("-", x, y, radius, function() {
 			ui.onDecreaseCurrentBet();
 		}));
 
-		helper.addToScene(helper.createLabeledRoundButton("+", backgroundWidth / 2 + 60, backgroundHeight - 85, radius, function() {
+		x = backgroundWidth / 2 + 60;
+		y = backgroundHeight - 85;
+		helper.addToScene(helper.createLabeledRoundButton("+", x, y, radius, function() {
 			ui.onIncreaseCurrentBet();
 		}));
     };
 
     function createSpinButton() {
-    	helper.addToScene(helper.createLabeledRoundButton("SPIN", backgroundWidth - 120, backgroundHeight - 75, 50, function() {
+    	const radius = 50;
+    	const x = backgroundWidth - 120;
+    	const y = backgroundHeight - 75;
+    	helper.addToScene(helper.createLabeledRoundButton("SPIN", x, y, radius, function() {
 			ui.onSpin();
 		}));
     };
