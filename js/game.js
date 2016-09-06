@@ -10,7 +10,7 @@ function Game() {
 
 	var totalCoins = 2000;
 
-	var bet = 20;
+	var bet = 1980;
 	const minBet = 20;
 	const maxBet = 100;
 	const deltaBet = 10;
@@ -33,12 +33,12 @@ function Game() {
 		if (isSpinning)
 			return;
 
-		isSpinning = true;
-
 		if (totalCoins - bet < 0) {
 			alert("Not enough coins!");
 			return;
 		}
+
+		isSpinning = true;
 
 		if (slotMachine.spin(bet, spinResult)) {
 			totalCoins -= bet;
