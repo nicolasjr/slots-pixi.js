@@ -10,7 +10,7 @@ function Game() {
 
 	var totalCoins = 2000;
 
-	var bet = 1980;
+	var bet = 20;
 	const minBet = 20;
 	const maxBet = 100;
 	const deltaBet = 10;
