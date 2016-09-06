@@ -1,6 +1,6 @@
 function GameUi() {
 
-	self.onSpin
+	self.onSpin;
 	self.onIncreaseCurrentBet;
 	self.onDecreaseCurrentBet;
 
