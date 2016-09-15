@@ -101,14 +101,14 @@ function Reel(totalSlots, colId, mask) {
 	};
 
 	function endSpinAnimation() {
-		const minPos = 0;
-		const maxPos = positionY;
+		const startPos = positionY;
+		const endPos = positionY > deltaPosY / 2 ? deltaPosY : 0;
 
-		$({ y: minPos }).animate({ y: maxPos }, {
-			duration: 1000,
-			easing: "easeOutElastic",
+		$({ y: startPos }).animate({ y: endPos }, {
+			duration: 500,
+			easing: "easeOutBack",
 			step: function(now) {
-				positionY = maxPos - now;
+				positionY = Math.round(now);
 				positionSlotsInCol();
 			}
 		});
